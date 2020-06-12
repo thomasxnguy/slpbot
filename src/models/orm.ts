@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { createConnection } from 'typeorm';
+import {createConnection} from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import * as pMemoize from 'p-memoize';
 import { Config } from '../config';
@@ -23,6 +23,9 @@ export const connection = pMemoize(async (config: Config) => {
     logging: "all",
     namingStrategy: new SnakeNamingStrategy(),
     ssl: process.env.DATABASE_SSL === `true`,
-    synchronize: true,
+    cli: {
+      migrationsDir: 'src/migrations',
+    }
   });
 });
+

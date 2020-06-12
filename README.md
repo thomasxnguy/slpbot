@@ -15,8 +15,11 @@
 - Start with `npm run start`
 
 ### Local Environment
-- Setup Database with `cd docker; docker-compose up
+- Setup Database with `cd docker; docker-compose up`
+- Run migration with `npm run db:migration -- migration:run`
+- To create new migration, run `npm run db:migration -- migration:generate -n {{name}}`
 - Verify Database connecting to pgadmin `http://localhost:8080` or `psql -h localhost -p 5432 --username=admin -d slpbotdb`
+- 
 
 ### Usages
 

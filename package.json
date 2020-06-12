@@ -10,8 +10,7 @@
     "start": "node -r source-map-support/register -r dotenv/config dist/start.js",
     "dev": "nodemon -w src -e ts -x 'ts-node -r dotenv/config src/start.ts'",
     "db:create": "psql -c 'create database slpbot' postgres",
-    "db:migrate": "pg-migrate -U postgres -d migrations -u ${DATABASE_URL:-postgres://amWsQhSOLQGrRy3N:@localhost/slpbotdb}",
-    "heroku-postbuild": "npm run build && npm run db:migrate"
+    "db:migration": "ts-node ./node_modules/typeorm/cli -f ./src/models/ormconfig.ts",
   },
   "keywords": [
     "telegram",
