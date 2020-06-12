@@ -10,7 +10,7 @@
     "start": "node -r source-map-support/register -r dotenv/config dist/start.js",
     "dev": "nodemon -w src -e ts -x 'ts-node -r dotenv/config src/start.ts'",
     "db:create": "psql -c 'create database slpbot' postgres",
-    "db:migration": "ts-node ./node_modules/typeorm/cli -f ./src/models/ormconfig.ts",
+    "db:migration": "ts-node ./node_modules/typeorm/cli -f ./src/models/ormconfig.ts"
   },
   "keywords": [
     "telegram",
@@ -40,6 +40,7 @@
     "@types/qr-image": "3.2.2",
     "body-parser": "1.19.0",
     "dotenv": "8.2.0",
+    "guid-typescript": "^1.0.9",
     "lodash": "4.17.15",
     "p-memoize": "4.0.0",
     "pg": "8.2.1",

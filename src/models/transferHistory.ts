@@ -34,7 +34,7 @@ export class Transfer {
     readonly toAccount!: Account;
 
     @Column('numeric')
-    readonly amount!: string;
+    readonly amount!: number;
 
     @Column('text', { nullable: true })
     readonly internalRef?: string | null;

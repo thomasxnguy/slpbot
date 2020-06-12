@@ -13,5 +13,6 @@ export type BotContext = telegraf.Context & {
 };
 
 export type CommandHandler = <T extends BotContext>(context: T) => void | Promise<unknown>;
+export type HearHandler = <T extends BotContext>(context: T) => void | Promise<unknown>;
 
 export { Config } from './config';
