@@ -15,7 +15,6 @@ const handlers: Record<string, CommandHandler> = {
 const descriptions: Record<string, string> = {
   tip: tipCommandHandler.Description,
   balance: balanceCommandHandler.Description,
-  start: startCommandHandler.Description,
   withdraw: withdrawCommandHandler.Description,
 };
 

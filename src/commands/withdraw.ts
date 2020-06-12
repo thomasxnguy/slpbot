@@ -1,4 +1,4 @@
-import * as orm from '../orm';
+import { Transfer } from '../models/transfer';
 import { CommandHandler } from '../types';
 
 const Description = 'Withdraw the tokens to a specific address'
@@ -32,11 +32,11 @@ const Handler: CommandHandler = async ctx => {
     return;
   }
 
-  let transfer: orm.Transfer;
+  let transfer: Transfer;
 
   try {
-    transfer = await conn.getRepository(orm.Transfer).save(
-      Object.assign(new orm.Transfer(), {
+    transfer = await conn.getRepository(Transfer).save(
+      Object.assign(new Transfer(), {
         id: new Date().getTime().toString(),
         createdAt: new Date().toISOString(),
         fromAccountId: account.id,

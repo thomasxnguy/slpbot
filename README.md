@@ -10,9 +10,13 @@
 
 ### Get started
 
-Clone this repository and run `npm install`
+- Clone this repository and run `npm install`
+- Build with `npm run build`
+- Start with `npm run start`
 
-- For local development setup postgres DB : `docker run --rm --name slpbotdb -e POSTGRES_PASSWORD={PASSWORD} -d -p 5432:5432 postgres`
+### Local Environment
+- Setup Database with `cd docker; docker-compose up
+- Verify Database connecting to pgadmin `http://localhost:8080` or `psql -h localhost -p 5432 --username=admin -d slpbotdb`
 
 ### Usages
 

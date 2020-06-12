@@ -1,4 +1,5 @@
-import * as orm from '../orm';
+import { Transfer } from '../models/transfer';
+import { Account } from '../models/account';
 import { CommandHandler } from '../types';
 
 const Description = 'Send a tip to another user'
@@ -24,7 +25,7 @@ const Handler: CommandHandler = async ctx => {
     return;
   }
 
-  const receiver = await conn.getRepository(orm.Account).findOne({ username: receiverUsername, tokenId: ctx.config.tokenId });
+  const receiver = await conn.getRepository(Account).findOne({ username: receiverUsername, tokenId: ctx.config.tokenId });
 
   if (!receiver) {
     await ctx.reply(`I don't know who @${receiverUsername} is. Have them say /start`);
@@ -39,8 +40,8 @@ const Handler: CommandHandler = async ctx => {
   }
 
   try {
-    await conn.getRepository(orm.Transfer).save(
-      Object.assign(new orm.Transfer(), {
+    await conn.getRepository(Transfer).save(
+      Object.assign(new Transfer(), {
         id: new Date().getTime().toString(),
         tokenId: ctx.config.tokenId,
         createdAt: new Date().toISOString(),

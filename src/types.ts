@@ -1,13 +1,13 @@
 import { Connection } from 'typeorm';
 import * as telegraf from 'telegraf';
-import * as orm from './orm';
 import { Config } from './config';
+import { Account } from './models/account';
 
 export type BotContext = telegraf.Context & {
   username: string;
   userId: string;
   args: string[];
-  account: orm.Account;
+  account: Account;
   conn: Connection;
   config: Config;
 };

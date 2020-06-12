@@ -1,7 +1,7 @@
 create table account (
   id text not null unique,
   token_id text not null,
-  username text not null unique,
+  username text not null,
   allow_negative_balance boolean default false,
   created_at timestamptz not null default now(),
   balance numeric(18, 4) not null default 0 check ((allow_negative_balance = true) or (balance >= 0)),

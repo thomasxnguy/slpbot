@@ -1,6 +1,6 @@
 import { Telegraf } from 'telegraf';
 import { Config } from './config';
-import * as orm from './orm';
+import * as orm from './models/orm';
 import { BotContext } from './types';
 import { getOrCreateAccountForTelegramUser, getProcessExitPromise } from './utils';
 import { SetupBotCommand } from './commands/index';

@@ -5,7 +5,9 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "es2019",
-    "lib": [],
+    "lib": [
+      "dom"
+    ],
     "types": ["node"],
     "outDir": "dist",
     "experimentalDecorators": true,

@@ -1,22 +1,22 @@
 import { memoize } from 'lodash';
 import { Connection } from 'typeorm';
-import * as orm from './orm';
+import { Account } from './models/account';
 
 export const getOrCreateAccountForTelegramUser = async (
   conn: Connection,
   telegramUserId: string,
   username: string,
   tokenId: string,
-): Promise<orm.Account> => {
+): Promise<Account> => {
 
-  const account = await conn.getRepository(orm.Account).findOne({ id: telegramUserId, tokenId });
+  const account = await conn.getRepository(Account).findOne({ id: telegramUserId, tokenId });
 
   if (account) {
     return account;
   }
 
-  await conn.getRepository(orm.Account).save(
-    Object.assign(new orm.Account(), {
+  await conn.getRepository(Account).save(
+    Object.assign(new Account, {
       id: telegramUserId,
       tokenId,
       username,
