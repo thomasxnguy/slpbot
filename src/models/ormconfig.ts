@@ -1,11 +1,13 @@
 import {ConnectionOptions} from "typeorm";
 import {SnakeNamingStrategy} from "typeorm-naming-strategies";
 import {Account} from "./account";
-import {SideshiftOrder} from "./sideshiftOrder";
-import {SideshiftDeposit} from "./sideshiftDeposit";
-import {Transfer} from "./transfer";
+import {TransferHistory} from "./transferHistory";
+import {TransferPending} from "./transferPending";
 
-// Config file for ORM Migration
+/**
+ * For MIGRATION only.
+ * Config that needs to be injected to use cli migrations tool.
+ */
 const config: ConnectionOptions = {
     type: 'postgres',
     host: process.env.DB_HOST || 'localhost',
@@ -13,7 +15,7 @@ const config: ConnectionOptions = {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME || 'slpbotdb',
-    entities: [Account, SideshiftOrder, SideshiftDeposit, Transfer],
+    entities: [Account, TransferHistory, TransferPending],
     logging: "all",
     namingStrategy: new SnakeNamingStrategy(),
     ssl: process.env.DATABASE_SSL === `true`,

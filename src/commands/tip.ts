@@ -1,9 +1,13 @@
-import { Transfer } from '../models/transfer';
-import { Account } from '../models/account';
 import { CommandHandler } from '../types';
+import { getAccountByUserName } from "../repositories/account.repository";
+import { transferFund } from "../repositories/transfer.repository";
+import {recordTransfer} from "../repositories/transferPending.repository";
 
 const Description = 'Send a tip to another user'
 
+/*
+  Handle logic for tip command.
+ */
 const Handler: CommandHandler = async ctx => {
   const { conn } = ctx;
 
@@ -20,43 +24,34 @@ const Handler: CommandHandler = async ctx => {
 
   const receiverUsername = receiverRaw.match(/^@([a-z0-9_]+)$/i)?.[1];
 
+  // if receiver user name is not specified, print usage.
   if (!receiverUsername) {
     await usage();
     return;
   }
 
-  const receiver = await conn.getRepository(Account).findOne({ username: receiverUsername, tokenId: ctx.config.tokenId });
-
-  if (!receiver) {
-    await ctx.reply(`I don't know who @${receiverUsername} is. Have them say /start`);
-    return;
-  }
-
   const amount = parseFloat(amountRaw);
 
+  // if amount is negative, print usage.
   if (!(amount > 0)) {
     await usage();
     return;
   }
 
-  try {
-    await conn.getRepository(Transfer).save(
-      Object.assign(new Transfer(), {
-        id: new Date().getTime().toString(),
-        tokenId: ctx.config.tokenId,
-        createdAt: new Date().toISOString(),
-        fromAccountId: account.id,
-        toAccountId: receiver.id,
-        amount: amount.toString(),
-      })
-    );
-  } catch (error) {
-    if (error.message.match(/account_check/)) {
-      await ctx.reply(`Insufficient funds`);
-      return;
-    }
+  // check if enough funds.
+  if ((Number(ctx.account.balance) - amount) < 0) {
+    await ctx.reply(`Insufficient funds`);
+    return;
+  }
 
-    throw error;
+  const receiver = await getAccountByUserName(conn, receiverUsername, ctx.config.tokenId );
+
+  if (!receiver) {
+    // If receiver does not exist, record the transfer to the pending table.
+    await recordTransfer(conn, account, receiverUsername, ctx.config.tokenId, amount);
+  } else {
+    // Execute the transfer
+    await transferFund(conn, account, receiver, ctx.config.tokenId, amount);
   }
 
   const senderUsername = ctx.from?.username ?? 'You';

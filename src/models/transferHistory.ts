@@ -1,18 +1,33 @@
 import {Column, Entity, Index, ManyToOne, PrimaryColumn} from "typeorm";
 import {Account} from "./account";
 
+/**
+ * This table keeps track of all transfer history between accounts.
+ */
 @Entity()
-@Index(['id', 'tokenId'], {unique: true})
-export class Transfer {
+export class TransferHistory {
+
+    /**
+     * Unique UUID.
+     */
     @PrimaryColumn()
     readonly id!: string;
 
+    /**
+     * Transfer currency.
+     */
     @Column()
     readonly tokenId!: string;
 
+    /**
+     * Date of the transfer.
+     */
     @Column()
     readonly createdAt!: string;
 
+    /**
+     * Sender.
+     */
     @Column()
     readonly fromAccountId!: string;
 
@@ -23,6 +38,9 @@ export class Transfer {
     )
     readonly fromAccount!: Account;
 
+    /**
+     * Receiver.
+     */
     @Column()
     readonly toAccountId!: string;
 
@@ -33,9 +51,27 @@ export class Transfer {
     )
     readonly toAccount!: Account;
 
+    /**
+     * Amount transferred.
+     */
     @Column('numeric')
-    readonly amount!: number;
+    readonly amount!: string;
 
-    @Column('text', { nullable: true })
-    readonly internalRef?: string | null;
+
+    constructor(
+        id : string,
+        tokenId : string,
+        createdAt : string,
+        fromAccountId : string,
+        toAccountId : string,
+        amount : string
+    ){
+        this.id = id;
+        this.tokenId = tokenId;
+        this.createdAt = createdAt;
+        this.fromAccountId = fromAccountId;
+        this.toAccountId = toAccountId;
+        this.amount = amount;
+    }
+
 }

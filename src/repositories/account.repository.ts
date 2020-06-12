@@ -4,6 +4,10 @@ import {Account} from "../models/account";
 import {TransferPending} from "../models/transferPending";
 import {TransferHistory} from "../models/transferHistory";
 
+/**
+ * Get the account for a telegram user or create it if it does not exists.
+ * All pending transaction assigned to his username will be granted at creation.
+ */
 export const getOrCreateAccountForTelegramUser = async (
     conn: Connection,
     telegramUserId: string,
@@ -13,11 +17,12 @@ export const getOrCreateAccountForTelegramUser = async (
 
     const account = await conn.getRepository(Account).findOne({id: telegramUserId, tokenId});
 
+    // Account exists.
     if (account) {
         return account;
     }
 
-    // Create a new account otherwise
+    // Create a new account otherwise.
     const newAccount = new Account
     (
         telegramUserId,
@@ -56,21 +61,22 @@ export const getOrCreateAccountForTelegramUser = async (
     return getOrCreateAccountForTelegramUser(conn, telegramUserId, username, tokenId);
 };
 
+/**
+ * Get an account by userId and tokenId.
+ */
 export const getAccount = async (
     conn: Connection,
     userId: string,
     tokenId: string,
-): Promise<Account> => {
+): Promise<Account|undefined> => {
 
     const account = await conn.getRepository(Account).findOne({id: userId, tokenId});
-
-    if (account) {
-        return account;
-    }
-
-    return getAccount(conn, userId, tokenId);
+    return account;
 };
 
+/**
+ * Get an account by userName and tokenId.
+ */
 export const getAccountByUserName = async (
     conn: Connection,
     userName: string,
@@ -78,10 +84,5 @@ export const getAccountByUserName = async (
 ): Promise<Account|undefined> => {
 
     const account = await conn.getRepository(Account).findOne({ username: userName, tokenId });
-
-    if (account) {
-        return account;
-    }
-
-    return undefined;
+    return account;
 };

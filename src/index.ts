@@ -2,7 +2,8 @@ import { Telegraf } from 'telegraf';
 import { Config } from './config';
 import * as orm from './models/orm';
 import { BotContext } from './types';
-import { getOrCreateAccountForTelegramUser, getProcessExitPromise } from './utils';
+import { getProcessExitPromise } from './utils';
+import { getOrCreateAccountForTelegramUser } from './repositories/account.repository';
 import { SetupBotCommand } from './commands/index';
 
 const main = async (config: Config): Promise<void> => {

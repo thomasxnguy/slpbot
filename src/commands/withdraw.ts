@@ -1,8 +1,12 @@
-import { Transfer } from '../models/transfer';
+import {Guid} from "guid-typescript";
+import { TransferHistory } from '../models/transferHistory';
 import { CommandHandler } from '../types';
 
 const Description = 'Withdraw the tokens to a specific address'
 
+/*
+  Handle logic to withdraw tokens.
+ */
 const Handler: CommandHandler = async ctx => {
   const { conn } = ctx;
 
@@ -32,18 +36,18 @@ const Handler: CommandHandler = async ctx => {
     return;
   }
 
-  let transfer: Transfer;
+  let transfer: TransferHistory;
 
   try {
-    transfer = await conn.getRepository(Transfer).save(
-      Object.assign(new Transfer(), {
-        id: new Date().getTime().toString(),
-        createdAt: new Date().toISOString(),
-        fromAccountId: account.id,
-        toAccountId: 'funding',
-        amount: amount.toString(),
-      })
-    );
+    transfer = await conn.getRepository(TransferHistory).save(
+    new TransferHistory(
+        Guid.create().toString(),
+        ctx.config.tokenId,
+        new Date().toISOString(),
+        account.id,
+        "funding",
+        amount.toString()
+    ));
   } catch (error) {
     if (error.message.match(/account_check/)) {
       await ctx.reply(`Insufficient funds`);

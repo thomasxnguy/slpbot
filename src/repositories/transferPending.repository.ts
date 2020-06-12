@@ -3,6 +3,9 @@ import {Guid} from "guid-typescript";
 import {Account} from "../models/account";
 import {TransferPending} from "../models/transferPending";
 
+/**
+ * Record a pending transaction for a non existing user.
+ */
 export const recordTransfer = async (
     conn: Connection,
     sender: Account,

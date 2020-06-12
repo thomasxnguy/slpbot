@@ -3,11 +3,15 @@ import {Guid} from "guid-typescript";
 import {Account} from "../models/account";
 import {TransferHistory} from "../models/transferHistory";
 
+/**
+ * Execute an transfer between sender and receiver account.
+ * Balance will be updated in an atomic way.
+ */
 export const transferFund = async (
     conn: Connection,
     sender: Account,
     receiver: Account,
-    tokendId : string,
+    tokenId : string,
     amount : number
 ): Promise<void> => {
 
@@ -18,7 +22,7 @@ export const transferFund = async (
 
     const transfer = new TransferHistory(
         Guid.create().toString(),
-        tokendId,
+        tokenId,
         new Date().toISOString(),
         sender.id,
         receiver.id,

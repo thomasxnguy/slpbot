@@ -1,50 +1,78 @@
 import {Column, Entity, Index, OneToMany, PrimaryColumn} from "typeorm";
-import {Transfer} from "./transfer";
-import {SideshiftOrder} from "./sideshiftOrder";
+// eslint-disable-next-line import/no-cycle
+import {TransferHistory} from "./transferHistory";
 
 @Entity()
-@Index(['id', 'tokenId'], {unique: true})
 /**
- * Account with a balance
+ * Account for a user. It is defined by its unique telegram id and the token id the bot supports.
+ * Balance of user is tracked by this table.
  */
 export class Account {
-    @PrimaryColumn('text')
+
     /**
-     * Unique identifier for the account. Telegram unique id is used for user accounts,
-     * hard coded
+     * Telegram unique id.
      */
+    @PrimaryColumn('text')
     readonly id!: string;
 
-    @Column('text')
+    /**
+     * SLP Token id.
+     */
+    @PrimaryColumn('text')
     readonly tokenId!: string;
 
+    /**
+     * Account creation date.
+     */
     @Column()
     readonly createdAt!: string;
 
+    /**
+     * Telegram username (unique but can be modified by user).
+     */
     @Column('text', { nullable: true })
+    @Index("username-idx")
     readonly username?: string | null;
 
+    /**
+     * Balance for the couple (id, tokenId).
+     */
     @Column('numeric')
-    readonly balance!: string;
+    balance!: string;
 
+    /**
+     * History of all the transfer out.
+     */
     @OneToMany(
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        _type => SideshiftOrder,
-        order => order.account
-    )
-    readonly orders!: SideshiftOrder[];
-
-    @OneToMany(
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        _type => Transfer,
+        _type => TransferHistory,
         transfer => transfer.fromAccount
     )
-    readonly transfersOut!: Transfer[];
+    transfersOut!: TransferHistory[];
 
+    /**
+     * History of all the transfer in.
+     */
     @OneToMany(
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        _type => Transfer,
+        _type => TransferHistory,
         transfer => transfer.toAccount
     )
-    readonly transfersIn!: Transfer[];
+    transfersIn!: TransferHistory[];
+
+
+    constructor(
+        id : string,
+        tokenId : string,
+        createdAt : string,
+        username : string,
+        balance : string
+    ){
+        this.id = id;
+        this.tokenId = tokenId;
+        this.createdAt = createdAt;
+        this.username = username;
+        this.balance = balance;
+    }
+
 }
