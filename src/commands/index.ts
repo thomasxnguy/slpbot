@@ -1,6 +1,7 @@
-import { Telegraf } from 'telegraf';
+import {Telegraf} from 'telegraf';
 import { BotContext, CommandHandler } from '../types';
 import tipCommandHandler from './tip';
+import tipReplyCommandHandler from './tipReply';
 import balanceCommandHandler from './balance';
 import startCommandHandler from './start';
 import withdrawCommandHandler from './withdraw';
@@ -18,6 +19,9 @@ const descriptions: Record<string, string> = {
   withdraw: withdrawCommandHandler.Description,
 };
 
+/*
+  Setup methods for the bot. Register all the handlers (command, hears ...) and the help message.
+ */
 export const SetupBotCommand = (
   bot: Telegraf<BotContext>
 ): void => {
@@ -26,6 +30,9 @@ export const SetupBotCommand = (
   for (const commandName of Object.keys(handlers)) {
     bot.command(commandName, handlers[commandName]);
   }
+
+  // Register reply handler
+  bot.hears(/tip (\d*\.?\d*)/, tipReplyCommandHandler.Handler);
 
   // Register help message
   let helpMessage = `Command list: \n`
