@@ -32,7 +32,7 @@ export class Account {
      */
     @Column('text', { nullable: true })
     @Index("username-idx")
-    readonly username?: string | null;
+    username?: string | null;
 
     /**
      * Balance for the couple (id, tokenId).
@@ -64,8 +64,8 @@ export class Account {
     constructor(
         id : string,
         tokenId : string,
-        createdAt : string,
         username : string,
+        createdAt : string,
         balance : string
     ){
         this.id = id;

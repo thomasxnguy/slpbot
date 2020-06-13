@@ -15,6 +15,10 @@ export const  transferFund = async (
     amount : number
 ): Promise<string> => {
 
+    if (senderId === receiverId) {
+        return ''
+    }
+
     try {
         const resp = await getConnection().transaction("REPEATABLE READ", async transactionalEntityManager => {
             const sender = await conn.getRepository(Account).findOne({id: senderId, tokenId});
@@ -43,7 +47,7 @@ export const  transferFund = async (
                 amount.toString()
             )
 
-            await conn.getRepository(TransferHistory).save(transfer);
+            await conn.getRepository(TransferHistory).create(transfer);
             await conn.getRepository(Account).save(receiver);
             await conn.getRepository(Account).save(sender);
 

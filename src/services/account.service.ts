@@ -16,21 +16,27 @@ export const getOrCreateAccountForTelegramUser = async (
 ): Promise<Account> => {
 
     const account = await conn.getRepository(Account).findOne({id: telegramUserId, tokenId});
-
+    let toUpdateAccount: Account;
     // Account exists.
     if (account) {
-        return account;
-    }
+        // Check if username has changed, if no, return immediately.
+        if (account.username === username) {
+            return account;
+        }
 
-    // Create a new account otherwise.
-    const newAccount = new Account
-    (
-        telegramUserId,
+        account.username = username;
+        toUpdateAccount = account;
+    } else {
+        // Create a new account otherwise.
+        toUpdateAccount = new Account
+        (
+            telegramUserId,
             tokenId,
             username,
             new Date().toISOString(),
             "50",
-    );
+        );
+    }
 
     // Check if there are pending transactions, if yes consume the transactions
     const transferPendings = await conn.getRepository(TransferPending).find({receiverName: username, tokenId});
@@ -38,7 +44,7 @@ export const getOrCreateAccountForTelegramUser = async (
 
         await getConnection().transaction(async transactionalEntityManager => {
             for (const transferPending of transferPendings) {
-                newAccount.balance = (Number(newAccount.balance) + Number(transferPending.amount)).toString();
+                toUpdateAccount.balance = (Number(toUpdateAccount.balance) + Number(transferPending.amount)).toString();
 
                 const transferHistory = new TransferHistory(
                     Guid.create().toString(),
@@ -52,10 +58,10 @@ export const getOrCreateAccountForTelegramUser = async (
                 await conn.getRepository(TransferHistory).save(transferHistory);
                 await conn.getRepository(TransferPending).delete(transferPending);
             }
-            await conn.getRepository(Account).save(newAccount);
+            await conn.getRepository(Account).save(toUpdateAccount);
         });
     } else {
-        await conn.getRepository(Account).save(newAccount);
+        await conn.getRepository(Account).save(toUpdateAccount);
     }
 
     return getOrCreateAccountForTelegramUser(conn, telegramUserId, username, tokenId);

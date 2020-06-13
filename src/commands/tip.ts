@@ -11,7 +11,7 @@ const Description = 'Send a tip to another user'
 const Handler: CommandHandler = async ctx => {
   const { conn } = ctx;
 
-  const usage = () => ctx.reply(`Usage: /tip @username <amount>. Example: /tip @brekken 10`);
+  const usage = () => ctx.reply(`Usage: /tip @username <amount>. Example: /tip @thomasxnguy 10`);
 
   const { args, account } = ctx;
 
