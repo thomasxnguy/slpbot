@@ -19,7 +19,7 @@
 - Run migration with `npm run db:migration -- migration:run`
 - To create new migration, run `npm run db:migration -- migration:generate -n {{name}}`
 - Verify Database with pgadmin `http://localhost:8080` or with cli`psql -h localhost -p 5432 --username=admin -d slpbotdb`
-- 
+ 
 
 ### Usages
 
@@ -29,5 +29,5 @@
 | `/tip`      | DM/Group     | Send someone a tip                     | `/tip @someone 10` to send 10 `TOKEN` to `@someone`                                                                                           |                                                                             |
 | `/withdraw` | DM           | Withdraw your `TOKEN` balance as any coin  | `/withdraw bch qzs4cgag90hvr89e9ws74pgx763j9u32pus3yf8n7w 100` to withdraw 100 `TOKEN` as BCH to `qzs4cgag90hvr89e9ws74pgx763j9u32pus3yf8n7w` |
 
-###Licence
+### Licence
 MIT
