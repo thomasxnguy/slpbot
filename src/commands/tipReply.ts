@@ -1,7 +1,7 @@
 import { CommandHandler } from '../types';
-import { getAccountByUserName } from "../repositories/account.repository";
-import { transferFund } from "../repositories/transfer.repository";
-import {recordTransfer} from "../repositories/transferPending.repository";
+import { getAccountByUserName } from "../services/account.service";
+import { transferFund } from "../services/transfer.service";
+import {recordTransfer} from "../services/transferPending.service";
 
 /*
   Handle logic for tip at reply.
@@ -29,6 +29,7 @@ const Handler: CommandHandler = async ctx => {
       return;
     }
 
+    // pre-check if enough funds.
     if ((Number(ctx.account.balance) - amount) < 0) {
       await ctx.reply(`Insufficient funds`);
       return;
@@ -37,11 +38,19 @@ const Handler: CommandHandler = async ctx => {
     const receiver = await getAccountByUserName(conn, receiverUsername, ctx.config.tokenId);
 
     if (!receiver) {
-      // If receiver does not exist, record the transfer to temp table.
-      await recordTransfer(conn, account, receiverUsername, ctx.config.tokenId, amount);
+      // If receiver does not exist, record the transfer to the pending table.
+      const msg = await recordTransfer(conn, account.id, receiverUsername, ctx.config.tokenId, amount);
+      if (msg !== '') {
+        await ctx.reply(msg);
+        return;
+      }
     } else {
       // Execute the transfer
-      await transferFund(conn, account, receiver, ctx.config.tokenId, amount);
+      const msg = await transferFund(conn, account.id, receiver.id, ctx.config.tokenId, amount);
+      if (msg !== '') {
+        await ctx.reply(msg);
+        return;
+      }
     }
 
     const senderUsername = ctx.from?.username ?? 'You';

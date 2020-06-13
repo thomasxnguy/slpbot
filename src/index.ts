@@ -3,7 +3,7 @@ import { Config } from './config';
 import * as orm from './models/orm';
 import { BotContext } from './types';
 import { getProcessExitPromise } from './utils';
-import { getOrCreateAccountForTelegramUser } from './repositories/account.repository';
+import { getOrCreateAccountForTelegramUser } from './services/account.service';
 import { SetupBotCommand } from './commands/index';
 
 const main = async (config: Config): Promise<void> => {
