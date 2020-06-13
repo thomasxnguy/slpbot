@@ -2,6 +2,7 @@ import { CommandHandler } from '../types';
 import { getAccountByUserName } from "../services/account.service";
 import { transferFund } from "../services/transfer.service";
 import {recordTransfer} from "../services/transferPending.service";
+import {truncateDecimals} from "../utils";
 
 const Description = 'Send a tip to another user'
 
@@ -30,11 +31,16 @@ const Handler: CommandHandler = async ctx => {
     return;
   }
 
-  const amount = parseFloat(amountRaw);
-
-  // if amount is negative, print usage.
-  if (!(amount > 0)) {
+  // if amount it is not a number, print usage.
+  if (!(parseFloat(amountRaw) > 0)) {
     await usage();
+    return;
+  }
+
+  const amount = parseFloat(truncateDecimals(amountRaw, ctx.config.tokenDecimal));
+
+  if (!(amount > 0)) {
+    await ctx.reply(`Tip amount needs to be more than ${ctx.config.tokenMinimumValue}`);
     return;
   }
 
@@ -44,7 +50,7 @@ const Handler: CommandHandler = async ctx => {
     return;
   }
 
-  const receiver = await getAccountByUserName(conn, receiverUsername, ctx.config.tokenId );
+  const receiver = await getAccountByUserName(conn, receiverUsername, ctx.config.tokenId);
 
   if (!receiver) {
     // If receiver does not exist, record the transfer to the pending table.
@@ -61,6 +67,7 @@ const Handler: CommandHandler = async ctx => {
       return;
     }
   }
+
 
   const senderUsername = ctx.from?.username ?? 'You';
 

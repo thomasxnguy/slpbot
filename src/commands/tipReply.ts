@@ -2,6 +2,7 @@ import { CommandHandler } from '../types';
 import { getAccountByUserName } from "../services/account.service";
 import { transferFund } from "../services/transfer.service";
 import {recordTransfer} from "../services/transferPending.service";
+import {truncateDecimals} from "../utils";
 
 /*
   Handle logic for tip at reply.
@@ -23,33 +24,37 @@ const Handler: CommandHandler = async ctx => {
       return;
     }
 
-    const amount = parseFloat(args[0]);
-    if (!(amount > 0)) {
+    // if amount it is not a number, print usage.
+    if (!(parseFloat(args[0]) > 0)) {
       await usage();
       return;
     }
 
-    // pre-check if enough funds.
-    if ((Number(ctx.account.balance) - amount) < 0) {
-      await ctx.reply(`Insufficient funds`);
-      return;
-    }
+    const amount = parseFloat(truncateDecimals(args[0], ctx.config.tokenDecimal));
 
-    const receiver = await getAccountByUserName(conn, receiverUsername, ctx.config.tokenId);
-
-    if (!receiver) {
-      // If receiver does not exist, record the transfer to the pending table.
-      const msg = await recordTransfer(conn, account.id, receiverUsername, ctx.config.tokenId, amount);
-      if (msg !== '') {
-        await ctx.reply(msg);
+    if (amount !== 0 ) {
+      // pre-check if enough funds.
+      if ((Number(ctx.account.balance) - amount) < 0) {
+        await ctx.reply(`Insufficient funds`);
         return;
       }
-    } else {
-      // Execute the transfer
-      const msg = await transferFund(conn, account.id, receiver.id, ctx.config.tokenId, amount);
-      if (msg !== '') {
-        await ctx.reply(msg);
-        return;
+
+      const receiver = await getAccountByUserName(conn, receiverUsername, ctx.config.tokenId);
+
+      if (!receiver) {
+        // If receiver does not exist, record the transfer to the pending table.
+        const msg = await recordTransfer(conn, account.id, receiverUsername, ctx.config.tokenId, amount);
+        if (msg !== '') {
+          await ctx.reply(msg);
+          return;
+        }
+      } else {
+        // Execute the transfer
+        const msg = await transferFund(conn, account.id, receiver.id, ctx.config.tokenId, amount);
+        if (msg !== '') {
+          await ctx.reply(msg);
+          return;
+        }
       }
     }
 
