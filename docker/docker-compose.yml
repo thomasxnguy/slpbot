@@ -2,6 +2,7 @@ version: "3"
 services:
   postgres:
     container_name: slpbotdb
+    hostname: slpbotdb
     image: postgres:latest
     ports:
     - "5432:5432"
@@ -25,7 +26,20 @@ services:
     - docker.env
     networks:
     - postgres
- 
+
+  slpbot:
+    container_name: slpbot
+    hostname: slpbot
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    environment:
+      ENV_NAME: dev
+    networks:
+      - postgres
+    depends_on:
+      - postgres
+
 networks:
   postgres:
     driver: bridge
