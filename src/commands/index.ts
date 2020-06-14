@@ -32,7 +32,7 @@ export const SetupBotCommand = (
   }
 
   // Register reply handler
-  bot.hears(/tip (\d*\.?\d*)/, tipReplyCommandHandler.Handler);
+  bot.hears(/^tip (\d*\.?\d*)/, tipReplyCommandHandler.Handler);
 
   // Register help message
   let helpMessage = `Command list: \n`
