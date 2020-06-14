@@ -35,16 +35,15 @@ export const  transferFund = async (
                 return 'Insufficient fund';
             }
 
-            sender.balance = (Number(sender.balance) - amount).toString();
-            receiver.balance = (Number(receiver.balance) + amount).toString();
-
+            sender.balance -= amount;
+            receiver.balance += amount;
             const transfer = new TransferHistory(
                 Guid.create().toString(),
                 tokenId,
                 new Date().toISOString(),
                 sender.id,
                 receiver.id,
-                amount.toString()
+                amount
             )
 
             await conn.getRepository(TransferHistory).create(transfer);

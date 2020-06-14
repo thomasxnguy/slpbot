@@ -1,6 +1,7 @@
 import {Column, Entity, Index, OneToMany, PrimaryColumn} from "typeorm";
 // eslint-disable-next-line import/no-cycle
 import {TransferHistory} from "./transferHistory";
+import {ColumnNumericTransformer} from "../utils";
 
 @Entity()
 /**
@@ -37,8 +38,10 @@ export class Account {
     /**
      * Balance for the couple (id, tokenId).
      */
-    @Column('numeric')
-    balance!: string;
+    @Column('numeric', {
+        transformer: new ColumnNumericTransformer(),
+    })
+    balance!: number;
 
     /**
      * History of all the transfer out.
@@ -66,7 +69,7 @@ export class Account {
         tokenId : string,
         username : string,
         createdAt : string,
-        balance : string
+        balance : number
     ){
         this.id = id;
         this.tokenId = tokenId;

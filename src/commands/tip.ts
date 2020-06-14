@@ -2,7 +2,7 @@ import { CommandHandler } from '../types';
 import { getAccountByUserName } from "../services/account.service";
 import { transferFund } from "../services/transfer.service";
 import {recordTransfer} from "../services/transferPending.service";
-import {truncateDecimals} from "../utils";
+import {isNumber, truncateDecimals} from "../utils";
 
 const Description = 'Send a tip to another user'
 
@@ -32,7 +32,7 @@ const Handler: CommandHandler = async ctx => {
   }
 
   // if amount it is not a number, print usage.
-  if (!(parseFloat(amountRaw) > 0)) {
+  if (!isNumber(amountRaw)) {
     await usage();
     return;
   }
@@ -45,7 +45,7 @@ const Handler: CommandHandler = async ctx => {
   }
 
   // pre-check if enough funds.
-  if ((Number(ctx.account.balance) - amount) < 0) {
+  if ((ctx.account.balance - amount) < 0) {
     await ctx.reply(`Insufficient funds`);
     return;
   }

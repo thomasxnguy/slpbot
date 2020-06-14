@@ -1,5 +1,6 @@
 import {Column, Entity, Index, ManyToOne, PrimaryColumn} from "typeorm";
 import {Account} from "./account";
+import {ColumnNumericTransformer} from "../utils";
 
 /**
  * This table keeps track of all transfer pending for a non-registered user.
@@ -40,6 +41,8 @@ export class TransferPending {
     /**
      * Amount transferred.
      */
-    @Column('numeric')
-    readonly amount!: string;
+    @Column('numeric', {
+        transformer: new ColumnNumericTransformer(),
+    })
+    readonly amount!: number;
 }

@@ -34,7 +34,7 @@ export const getOrCreateAccountForTelegramUser = async (
             tokenId,
             username,
             new Date().toISOString(),
-            "50",
+            50,
         );
     }
 
@@ -44,7 +44,7 @@ export const getOrCreateAccountForTelegramUser = async (
 
         await getConnection().transaction(async transactionalEntityManager => {
             for (const transferPending of transferPendings) {
-                toUpdateAccount.balance = (Number(toUpdateAccount.balance) + Number(transferPending.amount)).toString();
+                toUpdateAccount.balance += transferPending.amount;
 
                 const transferHistory = new TransferHistory(
                     Guid.create().toString(),

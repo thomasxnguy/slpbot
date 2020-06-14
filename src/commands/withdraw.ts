@@ -46,7 +46,7 @@ const Handler: CommandHandler = async ctx => {
         new Date().toISOString(),
         account.id,
         "funding",
-        amount.toString()
+        amount
     ));
   } catch (error) {
     if (error.message.match(/account_check/)) {

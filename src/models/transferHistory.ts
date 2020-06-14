@@ -1,5 +1,6 @@
 import {Column, Entity, Index, ManyToOne, PrimaryColumn} from "typeorm";
 import {Account} from "./account";
+import {ColumnNumericTransformer} from "../utils";
 
 /**
  * This table keeps track of all transfer history between accounts.
@@ -54,8 +55,10 @@ export class TransferHistory {
     /**
      * Amount transferred.
      */
-    @Column('numeric')
-    readonly amount!: string;
+    @Column('numeric', {
+        transformer: new ColumnNumericTransformer(),
+    })
+    readonly amount!: number;
 
 
     constructor(
@@ -64,7 +67,7 @@ export class TransferHistory {
         createdAt : string,
         fromAccountId : string,
         toAccountId : string,
-        amount : string
+        amount : number
     ){
         this.id = id;
         this.tokenId = tokenId;

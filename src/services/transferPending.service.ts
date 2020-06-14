@@ -26,8 +26,7 @@ export const recordTransfer = async (
                 return 'Insufficient fund';
             }
 
-            sender.balance = (Number(sender.balance) - amount).toString();
-
+            sender.balance -= amount;
             const transferTemp = Object.assign(new TransferPending(), {
                 id: Guid.create().toString(),
                 receiverName,
