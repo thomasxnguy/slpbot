@@ -2,6 +2,10 @@ import {Column, Entity, Index, OneToMany, PrimaryColumn} from "typeorm";
 // eslint-disable-next-line import/no-cycle
 import {TransferHistory} from "./transferHistory";
 import {ColumnNumericTransformer} from "../utils";
+// eslint-disable-next-line import/no-cycle
+import {Withdrawal} from "./withdrawal";
+// eslint-disable-next-line import/no-cycle
+import {TransferPending} from "./transferPending";
 
 @Entity()
 /**
@@ -62,6 +66,26 @@ export class Account {
         transfer => transfer.toAccount
     )
     transfersIn!: TransferHistory[];
+
+    /**
+     * History of all pending transfer.
+     */
+    @OneToMany(
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        _type => TransferPending,
+        transfer => transfer.fromAccount
+    )
+    transfersPending!: TransferPending[];
+
+    /**
+     * History of all the transfer out.
+     */
+    @OneToMany(
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        _type => Withdrawal,
+        withdrawal => withdrawal.fromAccount
+    )
+    withdrawals!: Withdrawal[];
 
 
     constructor(

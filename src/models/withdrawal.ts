@@ -3,22 +3,15 @@ import {Account} from "./account";
 import {ColumnNumericTransformer} from "../utils";
 
 /**
- * This table keeps track of all transfer pending for a non-registered user.
+ * This table keeps track of all user withdrawal.
  */
 @Entity()
-export class TransferPending {
+export class Withdrawal {
     /**
      * Unique UUID.
      */
     @PrimaryColumn()
-    readonly id!: string;
-
-    /**
-     * Non registered user's username.
-     */
-    @Column()
-    @Index("receivername-idx")
-    readonly receiverName!: string;
+    readonly txId!: string;
 
     /**
      * Time of the transfer.
@@ -33,20 +26,43 @@ export class TransferPending {
     readonly tokenId!: string;
 
     /**
+     * Address receiver.
+     */
+    @Column()
+    readonly address!: string;
+
+    /**
      * Sender.
      */
     @ManyToOne(
         _type => Account,
-        account => account.transfersPending,
+        account => account.transfersOut,
         {eager: true}
     )
     readonly fromAccount!: Account;
 
     /**
-     * Amount transferred.
+     * Amount withdraw.
      */
     @Column('numeric', {
         transformer: new ColumnNumericTransformer(),
     })
     readonly amount!: number;
+
+
+    constructor(
+        txId : string,
+        tokenId : string,
+        createdAt : string,
+        address: string,
+        fromAccount : Account,
+        amount : number
+    ){
+        this.txId = txId;
+        this.tokenId = tokenId;
+        this.createdAt = createdAt;
+        this.address = address;
+        this.fromAccount = fromAccount;
+        this.amount = amount;
+    }
 }

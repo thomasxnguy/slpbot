@@ -8,6 +8,8 @@ ENV NODE_CONFIG_ENV dev
 WORKDIR /usr/src/app
 # Only copy the package.json file to work directory
 COPY package.json .
+# Install git
+RUN apk add --no-cache git
 # Install all Packages
 RUN npm install
 # Copy all other source code to work directory

@@ -11,7 +11,8 @@ export const recordTransfer = async (
     senderId: string,
     receiverName: string,
     tokenId : string,
-    amount : number
+    amount : number,
+    decimal: number
 ): Promise<string> => {
 
     try {
@@ -26,13 +27,13 @@ export const recordTransfer = async (
                 return 'Insufficient fund';
             }
 
-            sender.balance -= amount;
+            sender.balance = Number((sender.balance-amount).toFixed(decimal));
             const transferTemp = Object.assign(new TransferPending(), {
                 id: Guid.create().toString(),
                 receiverName,
                 tokenId,
                 createdAt: new Date().toISOString(),
-                fromAccountId: sender.id,
+                fromAccount: sender,
                 amount,
             })
 

@@ -43,15 +43,18 @@ export const getOrCreateAccountForTelegramUser = async (
     if (transferPendings) {
 
         await getConnection().transaction(async transactionalEntityManager => {
+
+            await conn.getRepository(Account).save(toUpdateAccount);
+
             for (const transferPending of transferPendings) {
-                toUpdateAccount.balance += transferPending.amount;
+                toUpdateAccount.balance = transferPending.amount;
 
                 const transferHistory = new TransferHistory(
                     Guid.create().toString(),
                     tokenId,
                     transferPending.createdAt,
-                    transferPending.fromAccountId,
-                    telegramUserId,
+                    transferPending.fromAccount,
+                    toUpdateAccount,
                     transferPending.amount
                 )
 
@@ -77,6 +80,19 @@ export const getAccount = async (
 ): Promise<Account|undefined> => {
 
     const account = await conn.getRepository(Account).findOne({id: userId, tokenId});
+    return account;
+};
+
+/**
+ * Get an account by userId and tokenId with withdrawal history.
+ */
+export const getAccountWithWithdrawal = async (
+    conn: Connection,
+    userId: string,
+    tokenId: string,
+): Promise<Account|undefined> => {
+
+    const account = await conn.getRepository(Account).findOne({where : {id: userId, tokenId}, relations : ["withdrawals"] });
     return account;
 };
 

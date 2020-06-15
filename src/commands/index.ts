@@ -5,18 +5,24 @@ import tipReplyCommandHandler from './tipReply';
 import balanceCommandHandler from './balance';
 import startCommandHandler from './start';
 import withdrawCommandHandler from './withdraw';
+import tokenInfoCommandHandler from './tokenInfo';
+import withdrawHistoryCommandHandler from './withdrawalhistory';
 
 const handlers: Record<string, CommandHandler> = {
   tip: tipCommandHandler.Handler,
   balance: balanceCommandHandler.Handler,
   start: startCommandHandler.Handler,
   withdraw: withdrawCommandHandler.Handler,
+  tokeninfo: tokenInfoCommandHandler.Handler,
+  withdrawhistory: withdrawHistoryCommandHandler.Handler,
 };
 
 const descriptions: Record<string, string> = {
   tip: tipCommandHandler.Description,
   balance: balanceCommandHandler.Description,
   withdraw: withdrawCommandHandler.Description,
+  tokeninfo: tokenInfoCommandHandler.Description,
+  withdrawhistory: withdrawHistoryCommandHandler.Description
 };
 
 /*
@@ -32,7 +38,7 @@ export const SetupBotCommand = (
   }
 
   // Register reply handler
-  bot.hears(/^tip (\d*\.?\d*)/, tipReplyCommandHandler.Handler);
+  bot.hears(/^[tT]ip (\d*\.?\d*)/, tipReplyCommandHandler.Handler);
 
   // Register help message
   let helpMessage = `Command list: \n`
@@ -41,6 +47,10 @@ export const SetupBotCommand = (
   }
 
   bot.command(`help`, async ctx => {
+    await ctx.reply(helpMessage);
+  });
+
+  bot.command(`command`, async ctx => {
     await ctx.reply(helpMessage);
   });
 };

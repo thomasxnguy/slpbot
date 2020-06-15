@@ -3,6 +3,7 @@ import {SnakeNamingStrategy} from "typeorm-naming-strategies";
 import {Account} from "./account";
 import {TransferHistory} from "./transferHistory";
 import {TransferPending} from "./transferPending";
+import {Withdrawal} from "./withdrawal";
 
 /**
  * For MIGRATION only.
@@ -15,7 +16,7 @@ const config: ConnectionOptions = {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME || 'slpbotdb',
-    entities: [Account, TransferHistory, TransferPending],
+    entities: [Account, TransferHistory, TransferPending, Withdrawal],
     logging: "all",
     namingStrategy: new SnakeNamingStrategy(),
     ssl: process.env.DATABASE_SSL === `true`,

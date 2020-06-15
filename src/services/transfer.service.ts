@@ -12,7 +12,8 @@ export const  transferFund = async (
     senderId: string,
     receiverId: string,
     tokenId : string,
-    amount : number
+    amount : number,
+    decimal : number
 ): Promise<string> => {
 
     if (senderId === receiverId) {
@@ -35,18 +36,18 @@ export const  transferFund = async (
                 return 'Insufficient fund';
             }
 
-            sender.balance -= amount;
-            receiver.balance += amount;
+            sender.balance = Number((sender.balance-amount).toFixed(decimal));;
+            receiver.balance = Number((receiver.balance+amount).toFixed(decimal));;
             const transfer = new TransferHistory(
                 Guid.create().toString(),
                 tokenId,
                 new Date().toISOString(),
-                sender.id,
-                receiver.id,
+                sender,
+                receiver,
                 amount
             )
 
-            await conn.getRepository(TransferHistory).create(transfer);
+            await conn.getRepository(TransferHistory).save(transfer);
             await conn.getRepository(Account).save(receiver);
             await conn.getRepository(Account).save(sender);
 

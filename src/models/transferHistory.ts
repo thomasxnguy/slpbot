@@ -29,9 +29,6 @@ export class TransferHistory {
     /**
      * Sender.
      */
-    @Column()
-    readonly fromAccountId!: string;
-
     @ManyToOne(
         _type => Account,
         account => account.transfersOut,
@@ -42,9 +39,6 @@ export class TransferHistory {
     /**
      * Receiver.
      */
-    @Column()
-    readonly toAccountId!: string;
-
     @ManyToOne(
         _type => Account,
         account => account.transfersIn,
@@ -65,15 +59,15 @@ export class TransferHistory {
         id : string,
         tokenId : string,
         createdAt : string,
-        fromAccountId : string,
-        toAccountId : string,
+        fromAccount : Account,
+        toAccount : Account,
         amount : number
     ){
         this.id = id;
         this.tokenId = tokenId;
         this.createdAt = createdAt;
-        this.fromAccountId = fromAccountId;
-        this.toAccountId = toAccountId;
+        this.fromAccount = fromAccount;
+        this.toAccount = toAccount;
         this.amount = amount;
     }
 

@@ -54,14 +54,14 @@ const Handler: CommandHandler = async ctx => {
 
   if (!receiver) {
     // If receiver does not exist, record the transfer to the pending table.
-    const msg = await recordTransfer(conn, account.id, receiverUsername, ctx.config.tokenId, amount);
+    const msg = await recordTransfer(conn, account.id, receiverUsername, ctx.config.tokenId, amount, ctx.config.tokenDecimal);
     if (msg !== '') {
       await ctx.reply(msg);
       return;
     }
   } else {
     // Execute the transfer
-    const msg = await transferFund(conn, account.id, receiver.id, ctx.config.tokenId, amount);
+    const msg = await transferFund(conn, account.id, receiver.id, ctx.config.tokenId, amount, ctx.config.tokenDecimal);
     if (msg !== '') {
       await ctx.reply(msg);
       return;
@@ -71,7 +71,7 @@ const Handler: CommandHandler = async ctx => {
 
   const senderUsername = ctx.from?.username ?? 'You';
 
-  await ctx.reply(`${senderUsername} tipped ${amount} ${ctx.config.tokenId} to @${receiverUsername}`);
+  await ctx.reply(`${senderUsername} tipped ${amount} ${ctx.config.tokenName} to @${receiverUsername}`);
 };
 
 export default {Handler, Description};
