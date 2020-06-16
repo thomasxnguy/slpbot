@@ -37,7 +37,7 @@ const Handler: CommandHandler = async ctx => {
 
     let msg = 'Withdrawal history : \n'
     for (const element of history) {
-      msg = msg.concat(`- [${element.createdAt}] ${element.amount} ${ctx.config.tokenName} sent to address ${element.amount}\n txId : ${element.txId}\n`)
+      msg = msg.concat(`- ${element.createdAt} - ${element.amount} ${ctx.config.tokenName} sent to address [${element.address}]\n txId : ${element.txId}\n`)
     }
     await ctx.reply(msg);
 
