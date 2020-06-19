@@ -1,55 +1,55 @@
-// Set NETWORK to either testnet or mainnet
-const NETWORK = 'testnet'
+const NETWORK = `mainnet`
 
-// REST API servers.
-const MAINNET_API = 'https://api.fullstack.cash/v3/'
-const TESTNET_API = 'http://tapi.fullstack.cash/v3/'
+const SLPSDK = require("../lib/SLP")
 
-// bch-js-examples require code from the main bch-js repo
-const BCHJS = require('@chris.troutner/bch-js')
+// Instantiate SLP based on the network.
+let SLP
+if (NETWORK === `mainnet`)
+  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` })
+else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` })
 
-// Instantiate bch-js based on the network.
-let bchjs
-if (NETWORK === 'mainnet') bchjs = new BCHJS({ restURL: MAINNET_API })
-else bchjs = new BCHJS({ restURL: TESTNET_API })
+let SLP_FS
+if (NETWORK === `mainnet`)
+  SLP_FS = new SLPSDK({ restURL: `https://api.fullstack.cash/v3/` })
+else SLP_FS = new SLPSDK({ restURL: `https://tapi.fullstack.cash/v3/` })
 
 module.exports = async function GetBalance (mnemonic) {
   try {
-    // root seed buffer
-    const rootSeed = await bchjs.Mnemonic.toSeed(mnemonic)
 
+    // root seed buffer
+    const rootSeed = SLP.Mnemonic.toSeed(mnemonic)
     // master HDNode
     let masterHDNode
-    if (NETWORK === 'mainnet') masterHDNode = bchjs.HDNode.fromSeed(rootSeed)
-    else masterHDNode = bchjs.HDNode.fromSeed(rootSeed, 'testnet') // Testnet
+    if (NETWORK === `mainnet`) masterHDNode = SLP.HDNode.fromSeed(rootSeed)
+    else masterHDNode = SLP.HDNode.fromSeed(rootSeed, "testnet") // Testnet
 
     // HDNode of BIP44 account
-    const account = bchjs.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
+    const account = SLP.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
-    const change = bchjs.HDNode.derivePath(account, '0/0')
+    const change = SLP.HDNode.derivePath(account, "0/0")
 
     // get the cash address
-    const cashAddress = bchjs.HDNode.toCashAddress(change)
-    const slpAddress = bchjs.SLP.Address.toSLPAddress(cashAddress)
+    const cashAddress = SLP.HDNode.toCashAddress(change)
+    const slpAddress = SLP.Address.toSLPAddress(cashAddress)
 
     // first get BCH balance
-    const balance = await bchjs.Blockbook.balance(cashAddress)
+    const balance = await SLP.Address.details(cashAddress)
 
     console.log(`BCH Balance information for ${slpAddress}:`)
     console.log(balance)
-    console.log('SLP Token information:')
+    console.log(`SLP Token information:`)
 
     // get token balances
     try {
-      const tokens = await bchjs.SLP.Utils.balancesForAddress(slpAddress)
+      const tokens = await SLP_FS.Utils.balancesForAddress(slpAddress)
 
-      return JSON.stringify(tokens, null, 2)
+      console.log(JSON.stringify(tokens, null, 2))
     } catch (error) {
-      if (error.message === 'Address not found') return 'No tokens found.';
-        return 'Error: '.concat(error.toString())
+      if (error.message === "Address not found") console.log(`No tokens found.`)
+      else console.log(`Error: `, error)
     }
   } catch (err) {
-    console.error('Error in getBalance: ', err)
+    console.error(`Error in getBalance: `, err)
     console.log(`Error message: ${err.message}`)
     throw err
   }

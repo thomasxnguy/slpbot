@@ -25,9 +25,12 @@
 
 | Command     | Availability | Description                            | Example                                                                                                                                   |
 | ----------- | ------------ | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `/balance`  | DM/Group     | Look up your balance               | `/balance`                                                                                                                                |
-| `/tip`      | DM/Group     | Send someone a tip                     | `/tip @someone 10` to send 10 `TOKEN` to `@someone`                                                                                           |                                                                             |
-| `/withdraw` | DM           | Withdraw your `TOKEN` balance as any coin  | `/withdraw bch qzs4cgag90hvr89e9ws74pgx763j9u32pus3yf8n7w 100` to withdraw 100 `TOKEN` as BCH to `qzs4cgag90hvr89e9ws74pgx763j9u32pus3yf8n7w` |
+| `/help`     | DM/Group     | Show bot commands                      | `/help`
+| `/balance`  | DM/Group     | Look up your balance                   | `/balance`                                                                                                                                |
+| `/tip`      | DM/Group     | Send someone a tip                     | `/tip @someone 10` to send 10 `TOKEN` to `@someone`
+| `/tokeninfo`| DM/Group     | Show basic information about the slp token | `/tokeninfo`                                                                                                                                                                 |
+| `/withdraw` | DM           | Withdraw your `TOKEN` balance to an external slp address | `/withdraw simpleledger:qzs4cgag90hvr89e9ws74pgx763j9u32pus3yf8n7w 100` to withdraw 100 `TOKEN` to `simpleledger:qzs4cgag90hvr89e9ws74pgx763j9u32pus3yf8n7w` |
+| `/withdrawhistory` | DM     | Show records of all withdrawal         |  `/withdrawhistory`
 
 ### Licence
 MIT

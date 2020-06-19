@@ -17,7 +17,7 @@ const Handler: CommandHandler = async ctx => {
 
   const usage = () =>
     ctx.reply(
-      `Usage: /withdraw <slp_address> <amount>. Example: /withdraw slp:qpcfjcsntpu9yrcv9ud2sfqaztfpvy8tusan0wrlnj 50`
+      `Usage: /withdraw <slp_address> <amount>. Example: /withdraw simpleledger:qqfhqyvz5rvu2c26pv4e7ma9qc6xrrgh05vdsynla6 50`
     );
 
   const { args, account } = ctx;
@@ -35,7 +35,7 @@ const Handler: CommandHandler = async ctx => {
     return;
   }
 
-  if (address === '' || !address.startsWith('slp')) {
+  if (address === '' || !address.startsWith('simpleledger:')) {
     await ctx.reply(`Invalid slp address`);
     return;
   }

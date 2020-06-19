@@ -28,9 +28,9 @@ export const withdrawalFund = async (
                 return "Insufficient fund"
             }
 
-            account.balance = Number((account.balance+amount).toFixed(config.tokenDecimal));;
+            account.balance = Number((account.balance-amount).toFixed(config.tokenDecimal));
 
-            const txId = await wallet(config.walletMnemo, tokenId, amount, slpAddress)
+            const txId = await wallet(config.walletMnemo, tokenId, amount, slpAddress);
 
             if (txId === "invalid address") {
                 return "invalid slp address"
@@ -38,7 +38,7 @@ export const withdrawalFund = async (
 
 
             const withdrawal = new Withdrawal(
-                txId[0],
+                txId,
                 tokenId,
                 new Date().toISOString(),
                 slpAddress,
