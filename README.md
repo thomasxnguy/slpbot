@@ -30,7 +30,8 @@
 | `/tip`      | DM/Group     | Send someone a tip                     | `/tip @someone 10` to send 10 `TOKEN` to `@someone`
 | `/tokeninfo`| DM/Group     | Show basic information about the slp token | `/tokeninfo`                                                                                                                                                                 |
 | `/withdraw` | DM           | Withdraw your `TOKEN` balance to an external slp address | `/withdraw simpleledger:qzs4cgag90hvr89e9ws74pgx763j9u32pus3yf8n7w 100` to withdraw 100 `TOKEN` to `simpleledger:qzs4cgag90hvr89e9ws74pgx763j9u32pus3yf8n7w` |
-| `/withdrawhistory` | DM     | Show records of all withdrawal         |  `/withdrawhistory`
+| `/withdrawhistory` | DM     | Show records of all withdrawal         |  `/withdrawhistory` |
+| `/deposit` | DM     | Deposit tokens to account         |  `/deposit f1aa8276f055fc0497ed5c5dc5fe2b8626fa1dacef9d06a5bc1de3941bb5e3b6` |
 
 ### Licence
 MIT

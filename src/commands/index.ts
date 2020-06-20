@@ -5,6 +5,7 @@ import tipReplyCommandHandler from './tipReply';
 import balanceCommandHandler from './balance';
 import startCommandHandler from './start';
 import withdrawCommandHandler from './withdraw';
+import depositCommandHandler from './deposit';
 import tokenInfoCommandHandler from './tokenInfo';
 import withdrawHistoryCommandHandler from './withdrawalhistory';
 
@@ -15,6 +16,7 @@ const handlers: Record<string, CommandHandler> = {
   withdraw: withdrawCommandHandler.Handler,
   tokeninfo: tokenInfoCommandHandler.Handler,
   withdrawhistory: withdrawHistoryCommandHandler.Handler,
+  deposit: depositCommandHandler.Handler,
 };
 
 const descriptions: Record<string, string> = {
@@ -22,7 +24,8 @@ const descriptions: Record<string, string> = {
   balance: balanceCommandHandler.Description,
   withdraw: withdrawCommandHandler.Description,
   tokeninfo: tokenInfoCommandHandler.Description,
-  withdrawhistory: withdrawHistoryCommandHandler.Description
+  withdrawhistory: withdrawHistoryCommandHandler.Description,
+  deposit: depositCommandHandler.Description
 };
 
 /*
