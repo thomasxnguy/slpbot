@@ -86,11 +86,12 @@ export const getOrCreateAccountForTelegramUser = async (
             await conn.getRepository(Account).save(toUpdateAccount);
         });
     } else {
-        await conn.getRepository(Account).save(toUpdateAccount);
-        if (toCreateAddress != null) {
-            await conn.getRepository(SlpAddress).save(toCreateAddress);
-        }
-
+        await getConnection().transaction(async transactionalEntityManager => {
+            await conn.getRepository(Account).save(toUpdateAccount);
+            if (toCreateAddress != null) {
+                await conn.getRepository(SlpAddress).save(toCreateAddress);
+            }
+        });
     }
     return getOrCreateAccountForTelegramUser(conn, telegramUserId, username, tokenId);
 };
