@@ -7,6 +7,8 @@ import {Account} from "./account";
 import {TransferHistory} from "./transferHistory";
 import {TransferPending} from "./transferPending";
 import {Withdrawal} from "./withdrawal";
+import {SlpAddress} from "./slpAddress";
+import {TxId} from "./txId";
 
 /**
  * ORM connection.
@@ -21,7 +23,7 @@ export const connection = pMemoize(async (config: Config) => {
     username: config.dbUser,
     password: config.dbPass,
     database: config.dbName,
-    entities: [Account, TransferHistory, TransferPending, Withdrawal],
+    entities: [Account, TransferHistory, TransferPending, Withdrawal,SlpAddress, TxId],
     logging: "all",
     namingStrategy: new SnakeNamingStrategy(),
     ssl: process.env.DATABASE_SSL === `true`,

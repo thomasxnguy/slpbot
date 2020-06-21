@@ -4,6 +4,8 @@ import {Account} from "./account";
 import {TransferHistory} from "./transferHistory";
 import {TransferPending} from "./transferPending";
 import {Withdrawal} from "./withdrawal";
+import {SlpAddress} from "./slpAddress";
+import {TxId} from "./txId";
 
 /**
  * For MIGRATION only.
@@ -16,7 +18,7 @@ const config: ConnectionOptions = {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME || 'slpbotdb',
-    entities: [Account, TransferHistory, TransferPending, Withdrawal],
+    entities: [Account, TransferHistory, TransferPending, Withdrawal,SlpAddress, TxId],
     logging: "all",
     namingStrategy: new SnakeNamingStrategy(),
     ssl: process.env.DATABASE_SSL === `true`,

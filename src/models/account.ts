@@ -88,18 +88,27 @@ export class Account {
     withdrawals!: Withdrawal[];
 
 
+    /**
+     * SlpAddress
+     */
+    @Column()
+    readonly slpAddress!: string;
+
+
     constructor(
         id : string,
         tokenId : string,
         username : string,
         createdAt : string,
-        balance : number
+        balance : number,
+        slpAddress: string,
     ){
         this.id = id;
         this.tokenId = tokenId;
         this.createdAt = createdAt;
         this.username = username;
         this.balance = balance;
+        this.slpAddress = slpAddress;
     }
 
 }

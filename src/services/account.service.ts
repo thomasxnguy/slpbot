@@ -3,6 +3,8 @@ import {Guid} from "guid-typescript";
 import {Account} from "../models/account";
 import {TransferPending} from "../models/transferPending";
 import {TransferHistory} from "../models/transferHistory";
+import wallet from '../wallet/create/create-wallet';
+import {SlpAddress} from "../models/slpAddress";
 
 /**
  * Get the account for a telegram user or create it if it does not exists.
@@ -17,6 +19,7 @@ export const getOrCreateAccountForTelegramUser = async (
 
     const account = await conn.getRepository(Account).findOne({id: telegramUserId, tokenId});
     let toUpdateAccount: Account;
+    let toCreateAddress : SlpAddress | null = null;
     // Account exists.
     if (account) {
         // Check if username has changed, if no, return immediately.
@@ -27,15 +30,30 @@ export const getOrCreateAccountForTelegramUser = async (
         account.username = username;
         toUpdateAccount = account;
     } else {
-        // Create a new account otherwise.
+        // Create wallet
+        const {mnemonic, slpAddress, cashAddress, legacyAddress} = await wallet();
+        const dateNow = new Date().toISOString();
+        // Create a new account
         toUpdateAccount = new Account
         (
             telegramUserId,
             tokenId,
             username,
-            new Date().toISOString(),
+            dateNow,
             50,
+            slpAddress,
         );
+
+        // Create an SLP address
+        toCreateAddress = new SlpAddress(
+            slpAddress,
+            mnemonic,
+            cashAddress,
+            legacyAddress,
+            dateNow,
+            telegramUserId
+        )
+
     }
 
     // Check if there are pending transactions, if yes consume the transactions
@@ -45,6 +63,10 @@ export const getOrCreateAccountForTelegramUser = async (
         await getConnection().transaction(async transactionalEntityManager => {
 
             await conn.getRepository(Account).save(toUpdateAccount);
+
+            if (toCreateAddress != null) {
+                await conn.getRepository(SlpAddress).save(toCreateAddress);
+            }
 
             for (const transferPending of transferPendings) {
                 toUpdateAccount.balance = transferPending.amount;
@@ -65,8 +87,11 @@ export const getOrCreateAccountForTelegramUser = async (
         });
     } else {
         await conn.getRepository(Account).save(toUpdateAccount);
-    }
+        if (toCreateAddress != null) {
+            await conn.getRepository(SlpAddress).save(toCreateAddress);
+        }
 
+    }
     return getOrCreateAccountForTelegramUser(conn, telegramUserId, username, tokenId);
 };
 
