@@ -22,17 +22,16 @@ export class TxId {
     readonly createdAt!: string;
 
     /**
-     * out to bot address.
+     * Status of the txId.
+     *  Pending : waiting for confirmation
+     *  Paid : user account accredited
+     *  Terminated : amount moved to bot address
      */
-    @ManyToOne(
-        _type => SlpAddress,
-        account => account.txOut,
-        {eager: true}
-    )
-    readonly out!: SlpAddress;
+    @Column()
+    readonly status!: string;
 
     /**
-     * in from user.
+     * Record of the user address.
      */
     @ManyToOne(
         _type => SlpAddress,
@@ -46,11 +45,13 @@ export class TxId {
     constructor(
         id : string,
         createdAt : string,
-        amount : number
+        amount : number,
+        status: string
     ){
         this.id = id;
         this.createdAt = createdAt;
         this.amount = amount;
+        this.status = status;
     }
 
 }

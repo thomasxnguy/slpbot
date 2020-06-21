@@ -47,16 +47,6 @@ export class SlpAddress {
     readonly createdAt!: string;
 
     /**
-     * History of all the tx out to bot address.
-     */
-    @OneToMany(
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        _type => TxId,
-        transaction => transaction.out
-    )
-    txOut!: TransferHistory[];
-
-    /**
      * History of all tx in from deposit.
      */
     @OneToMany(
